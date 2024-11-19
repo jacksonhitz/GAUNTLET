@@ -7,6 +7,7 @@ public class FollowMouseWithDelay : MonoBehaviour
     public LayerMask groundLayer;
     public float collisionRadius = 0.245f;
     public float returnSpeed = 25f; // Increased speed for snapping back to the mouse position
+    public float launchThreshold = 0.1f; // Minimum distance to launch (prevents freezing)
 
     private bool isLaunched = false;
     private Vector3 launchDirection;
@@ -41,8 +42,8 @@ public class FollowMouseWithDelay : MonoBehaviour
             }
         }
 
-        // Check for mouse click to launch the object
-        if (Input.GetMouseButtonDown(0) && !isLaunched)
+        // Check for mouse click to launch the object, but only if it's not already near the mouse
+        if (Input.GetMouseButtonDown(0) && !isLaunched && Vector3.Distance(transform.position, mousePosition) > launchThreshold)
         {
             StartLaunch();
         }
