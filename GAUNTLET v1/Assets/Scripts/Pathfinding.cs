@@ -4,7 +4,7 @@ using UnityEngine;
 public class Pathfinding : MonoBehaviour
 {
     public GridManager tilemapManager;
-    private List<Vector3Int> path; // Store the latest calculated path
+    List<Vector3Int> path; 
 
     public List<Vector3Int> FindPath(Vector2 startWorldPosition, Vector2 targetWorldPosition)
     {
@@ -43,7 +43,7 @@ public class Pathfinding : MonoBehaviour
 
             if (currentTile == targetTile)
             {
-                path = RetracePath(cameFrom, startTile, targetTile); // Store path for visualization
+                path = RetracePath(cameFrom, startTile, targetTile); 
                 return path;
             }
 
@@ -51,7 +51,7 @@ public class Pathfinding : MonoBehaviour
             {
                 if (closedSet.Contains(neighbor)) continue;
 
-                int tentativeGCost = gCost[currentTile] + 1; // Assume uniform cost
+                int tentativeGCost = gCost[currentTile] + 1;
                 if (!openSet.Contains(neighbor) || tentativeGCost < gCost[neighbor])
                 {
                     cameFrom[neighbor] = currentTile;
@@ -64,11 +64,11 @@ public class Pathfinding : MonoBehaviour
             }
         }
 
-        path = null; // Clear path if no valid path found
+        path = null; 
         return null;
     }
 
-    private List<Vector3Int> RetracePath(Dictionary<Vector3Int, Vector3Int> cameFrom, Vector3Int startTile, Vector3Int endTile)
+    List<Vector3Int> RetracePath(Dictionary<Vector3Int, Vector3Int> cameFrom, Vector3Int startTile, Vector3Int endTile)
     {
         List<Vector3Int> path = new List<Vector3Int>();
         Vector3Int currentTile = endTile;
@@ -97,9 +97,8 @@ public class Pathfinding : MonoBehaviour
         for (int i = 0; i < path.Count; i++)
         {
             Vector3 worldPosition = tilemapManager.TileToWorldPosition(path[i]);
-            Gizmos.DrawSphere(worldPosition, 0.2f); // Draw a small sphere for each path tile
+            Gizmos.DrawSphere(worldPosition, 0.2f); 
 
-            // Draw lines connecting the path
             if (i < path.Count - 1)
             {
                 Vector3 nextWorldPosition = tilemapManager.TileToWorldPosition(path[i + 1]);
