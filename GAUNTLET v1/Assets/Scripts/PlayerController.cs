@@ -19,10 +19,12 @@ public class PlayerController : MonoBehaviour
     private bool isDashing;
     private float dashTime;
     private Vector2 dashDirection;
+    private bool canDash; // Tracks if dash is available
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        canDash = true; // Dash is initially available
     }
 
     void Update()
@@ -39,7 +41,7 @@ public class PlayerController : MonoBehaviour
         HandleDash();
 
         // Debugging output to verify ground check and jump count
-        Debug.Log($"Grounded: {isGrounded}, JumpCount: {jumpCount}");
+        Debug.Log($"Grounded: {isGrounded}, JumpCount: {jumpCount}, CanDash: {canDash}");
     }
 
     private void HandleMovement()
@@ -50,23 +52,27 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        // Reset jump count when grounded
-        if (isGrounded && jumpCount > 0)
+        // Reset jump count and dash availability when grounded
+        if (isGrounded)
         {
-            jumpCount = 0; // Reset jump count
+            jumpCount = 0; // Reset jump count on the ground
+            canDash = true; // Reset dash on the ground
         }
 
         // Jump when pressing the jump button and jump count is within limits
-        if (Input.GetButtonDown("Jump") && (isGrounded || jumpCount < maxJumps))
+        if (Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            jumpCount++;
+            if (isGrounded || jumpCount < maxJumps)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                jumpCount++;
+            }
         }
     }
 
     private void HandleDash()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash)
         {
             StartDash();
         }
@@ -88,6 +94,7 @@ public class PlayerController : MonoBehaviour
         isDashing = true;
         dashTime = dashDuration;
 
+        // Get horizontal input for dash direction
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         dashDirection = new Vector2(horizontalInput, 0).normalized;
 
@@ -99,6 +106,9 @@ public class PlayerController : MonoBehaviour
 
         // Disable gravity during dash
         rb.gravityScale = 0;
+
+        // Consume dash
+        canDash = false;
     }
 
     private void EndDash()
