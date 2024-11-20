@@ -64,28 +64,33 @@ public class FollowMouseWithDelay : MonoBehaviour
         // Check if the object is going out of bounds of the camera
         if (IsOutOfBounds())
         {
-            // Immediately snap back to the mouse position if out of bounds
-            ReturnToMousePosition();
+            // Bounce off the camera borders
+            BounceOffBorders();
         }
 
-        // Check for collision
+        // Check for collision with the ground
         Collider2D hit = Physics2D.OverlapCircle(transform.position, collisionRadius, groundLayer);
         if (hit != null)
         {
-            // Stop launching and return to the mouse position
+            // Stop launching and allow object to settle
             isLaunched = false;
         }
     }
 
-    void ReturnToMousePosition()
+    void BounceOffBorders()
     {
-        // Move back towards the mouse position with high speed
-        transform.position = Vector3.MoveTowards(transform.position, mousePosition, returnSpeed * Time.deltaTime);
+        Camera mainCamera = Camera.main;
+        Vector3 screenPos = mainCamera.WorldToViewportPoint(transform.position);
 
-        // If it reaches the mouse position, reset the launch state and allow it to launch again
-        if (transform.position == mousePosition)
+        // Reverse direction when hitting camera borders
+        if (screenPos.x < 0 || screenPos.x > 1)
         {
-            isLaunched = false;
+            launchDirection.x = -launchDirection.x; // Bounce off the left or right
+        }
+
+        if (screenPos.y < 0 || screenPos.y > 1)
+        {
+            launchDirection.y = -launchDirection.y; // Bounce off the top or bottom
         }
     }
 
@@ -94,6 +99,8 @@ public class FollowMouseWithDelay : MonoBehaviour
     {
         Camera mainCamera = Camera.main;
         Vector3 screenPos = mainCamera.WorldToViewportPoint(transform.position);
+
+        // If the object is outside the camera's view (left, right, top, or bottom edges)
         return screenPos.x < 0 || screenPos.x > 1 || screenPos.y < 0 || screenPos.y > 1;
     }
 }
