@@ -431,11 +431,11 @@ MonoBehaviour:
   dashSpeed: 15
   dashDuration: 0.2
   jumpForce: 6
-  maxJumps: 2
-  groundCheck: {fileID: 468252420}
+  maxJumps: 1
+  groundCheck: {fileID: 1451057026}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 8
 --- !u!50 &468252417
 Rigidbody2D:
   serializedVersion: 4
@@ -2374,13 +2374,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   launchSpeed: 30
-  slamSpeed: 30
+  slamSpeed: 50
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   collisionRadius: 0.245
   returnSpeed: 100
-  launchThreshold: 0.1
+  launchThreshold: 0.001
 --- !u!212 &1138215343
 SpriteRenderer:
   m_ObjectHideFlags: 0
