@@ -51,14 +51,23 @@ public class FollowMouseWithDelay : MonoBehaviour
 
     private void FollowMouse()
     {
-        Vector3 targetPosition = Vector3.MoveTowards(transform.position, mousePosition, moveSpeed * Time.deltaTime);
+        // Calculate direction from gauntlet to mouse position
+        Vector3 directionToMouse = mousePosition - transform.position;
+
+        // Add an offset to this direction so the gauntlet doesn't center directly on the cursor
+        float offsetDistance = 0.5f; // This controls how far the gauntlet stays from the cursor
+        Vector3 offsetDirection = directionToMouse.normalized * offsetDistance;
+
+        // Calculate the new target position with the offset
+        Vector3 targetPosition = mousePosition - offsetDirection;
 
         // Perform collision check before moving
         if (!Physics2D.OverlapCircle(targetPosition, collisionRadius, groundLayer))
         {
-            transform.position = targetPosition;
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
         }
     }
+
 
     private void HandleInput()
     {
