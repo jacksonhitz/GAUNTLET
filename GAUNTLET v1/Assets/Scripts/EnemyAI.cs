@@ -22,6 +22,8 @@ public class EnemyAI : MonoBehaviour
         pathfinding = GetComponent<Pathfinding>();
         gridManager = FindObjectOfType<GridManager>();
         rb = GetComponent<Rigidbody2D>(); 
+        target = GameObject.FindWithTag("Player").transform;
+
         StartCoroutine(UpdatePath());
     }
 
