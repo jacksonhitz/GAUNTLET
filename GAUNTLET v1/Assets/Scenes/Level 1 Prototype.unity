@@ -370,7 +370,7 @@ Transform:
   m_GameObject: {fileID: 407199747}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -158.83403, y: -91.69, z: -0.004387355}
+  m_LocalPosition: {x: -151.82, y: -91.69, z: -0.004387355}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -428,11 +428,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
+  dashSpeed: 15
+  dashDuration: 0.2
   jumpForce: 6
+  maxJumps: 2
   groundCheck: {fileID: 468252420}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 9
 --- !u!50 &468252417
 Rigidbody2D:
   serializedVersion: 4
@@ -458,7 +461,7 @@ Rigidbody2D:
     m_Bits: 64
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &468252418
 BoxCollider2D:
@@ -566,7 +569,7 @@ Transform:
   m_GameObject: {fileID: 468252415}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -165.27, y: -91.61, z: 0}
+  m_LocalPosition: {x: -165.27, y: -91.71, z: 0}
   m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2369,13 +2372,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9832238ab2a842c1b411e00f121e0ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 10
   launchSpeed: 30
+  slamSpeed: 30
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   collisionRadius: 0.245
-  returnSpeed: 30
+  returnSpeed: 100
   launchThreshold: 0.1
 --- !u!212 &1138215343
 SpriteRenderer:
@@ -2454,7 +2458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1206882488}
   - component: {fileID: 1206882487}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
