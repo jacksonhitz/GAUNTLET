@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
 
     private Rigidbody2D rb;
-    private bool isGrounded;
+    public bool isGrounded;
     private int jumpCount;
     private bool isDashing;
     private float dashTime;
@@ -24,12 +24,11 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        canDash = true; // Dash is initially available
+        canDash = true; 
     }
 
     void Update()
     {
-        // Perform a ground check
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
         if (!isDashing)
@@ -39,9 +38,6 @@ public class PlayerController : MonoBehaviour
         }
 
         HandleDash();
-
-        // Debugging output to verify ground check and jump count
-        Debug.Log($"Grounded: {isGrounded}, JumpCount: {jumpCount}, CanDash: {canDash}");
     }
 
     private void HandleMovement()
@@ -62,7 +58,7 @@ public class PlayerController : MonoBehaviour
         // Jump when pressing the jump button and jump count is within limits
         if (Input.GetButtonDown("Jump"))
         {
-            if (isGrounded || jumpCount < maxJumps)
+            if (isGrounded)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 jumpCount++;

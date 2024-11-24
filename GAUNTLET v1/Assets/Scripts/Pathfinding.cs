@@ -1,62 +1,97 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class Pathfinding : MonoBehaviour
 {
-    public GridManager tilemapManager;
-    List<Vector3Int> path; 
+    public GameObject enemy;
+    public int gridWidth = 50;
+    public int gridHeight = 50;
+    public float cellSize = 0.2f;
+    public Tilemap tilemap;
 
-    public List<Vector3Int> FindPath(Vector2 startWorldPosition, Vector2 targetWorldPosition)
+    private Node[,] grid;
+    private List<Node> path;
+
+    private void Update()
     {
-        Vector3Int startTile = tilemapManager.WorldToTilePosition(startWorldPosition);
-        Vector3Int targetTile = tilemapManager.WorldToTilePosition(targetWorldPosition);
-
-        if (!tilemapManager.IsWalkable(startTile) || !tilemapManager.IsWalkable(targetTile))
+        if (enemy != null)
         {
-            path = null; // Clear path if invalid
+            CreateGrid(enemy.transform.position);
+        }
+    }
+
+    private void CreateGrid(Vector3 origin)
+    {
+        grid = new Node[gridWidth, gridHeight];
+        Vector2 gridOrigin = new Vector2(origin.x - (gridWidth * cellSize) / 2, origin.y - (gridHeight * cellSize) / 2);
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                Vector3 worldPosition = gridOrigin + new Vector2(x * cellSize, y * cellSize);
+                Vector3Int tilePosition = tilemap.WorldToCell(worldPosition);
+
+                bool isWalkable = !tilemap.HasTile(tilePosition);
+                grid[x, y] = new Node(new Vector3Int(x, y, 0), worldPosition, isWalkable);
+            }
+        }
+    }
+
+    public List<Vector3> FindPath(Vector2 startWorldPosition, Vector2 targetWorldPosition)
+    {
+        Node startNode = GetNodeFromWorldPosition(startWorldPosition);
+        Node targetNode = GetNodeFromWorldPosition(targetWorldPosition);
+
+        if (startNode == null || targetNode == null || !startNode.walkable || !targetNode.walkable)
+        {
+            path = null;
             return null;
         }
 
-        List<Vector3Int> openSet = new List<Vector3Int>();
-        HashSet<Vector3Int> closedSet = new HashSet<Vector3Int>();
-        Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>();
-        Dictionary<Vector3Int, int> gCost = new Dictionary<Vector3Int, int>();
-        Dictionary<Vector3Int, int> fCost = new Dictionary<Vector3Int, int>();
+        List<Node> openSet = new List<Node>();
+        HashSet<Node> closedSet = new HashSet<Node>();
+        Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>();
+        Dictionary<Node, int> gCost = new Dictionary<Node, int>();
+        Dictionary<Node, int> fCost = new Dictionary<Node, int>();
 
-        openSet.Add(startTile);
-        gCost[startTile] = 0;
-        fCost[startTile] = GetHeuristic(startTile, targetTile);
+        openSet.Add(startNode);
+        gCost[startNode] = 0;
+        fCost[startNode] = GetHeuristic(startNode, targetNode);
 
         while (openSet.Count > 0)
         {
-            Vector3Int currentTile = openSet[0];
-            foreach (Vector3Int tile in openSet)
+            Node currentNode = openSet[0];
+            foreach (Node node in openSet)
             {
-                if (fCost[tile] < fCost[currentTile] || (fCost[tile] == fCost[currentTile] && gCost[tile] < gCost[currentTile]))
+                if (fCost[node] < fCost[currentNode] || (fCost[node] == fCost[currentNode] && gCost[node] < gCost[currentNode]))
                 {
-                    currentTile = tile;
+                    currentNode = node;
                 }
             }
 
-            openSet.Remove(currentTile);
-            closedSet.Add(currentTile);
+            openSet.Remove(currentNode);
+            closedSet.Add(currentNode);
 
-            if (currentTile == targetTile)
+            if (currentNode == targetNode)
             {
-                path = RetracePath(cameFrom, startTile, targetTile); 
-                return path;
+                path = RetracePath(cameFrom, startNode, targetNode);
+                return ConvertNodesToWorldPositions(path);
             }
 
-            foreach (Vector3Int neighbor in tilemapManager.GetNeighbors(currentTile))
+            foreach (Node neighbor in GetNeighbors(currentNode))
             {
                 if (closedSet.Contains(neighbor)) continue;
+                if (!neighbor.walkable) continue;
 
-                int tentativeGCost = gCost[currentTile] + 1;
+                int tentativeGCost = gCost[currentNode] + 1;
                 if (!openSet.Contains(neighbor) || tentativeGCost < gCost[neighbor])
                 {
-                    cameFrom[neighbor] = currentTile;
+                    cameFrom[neighbor] = currentNode;
                     gCost[neighbor] = tentativeGCost;
-                    fCost[neighbor] = gCost[neighbor] + GetHeuristic(neighbor, targetTile);
+                    fCost[neighbor] = gCost[neighbor] + GetHeuristic(neighbor, targetNode);
 
                     if (!openSet.Contains(neighbor))
                         openSet.Add(neighbor);
@@ -64,46 +99,88 @@ public class Pathfinding : MonoBehaviour
             }
         }
 
-        path = null; 
+        path = null;
         return null;
     }
 
-    List<Vector3Int> RetracePath(Dictionary<Vector3Int, Vector3Int> cameFrom, Vector3Int startTile, Vector3Int endTile)
+    private List<Vector3> ConvertNodesToWorldPositions(List<Node> nodes)
     {
-        List<Vector3Int> path = new List<Vector3Int>();
-        Vector3Int currentTile = endTile;
-
-        while (currentTile != startTile)
+        List<Vector3> worldPositions = new List<Vector3>();
+        foreach (Node node in nodes)
         {
-            path.Add(currentTile);
-            currentTile = cameFrom[currentTile];
+            worldPositions.Add(node.worldPosition);
+        }
+        return worldPositions;
+    }
+
+    private Node GetNodeFromWorldPosition(Vector2 worldPosition)
+    {
+        Vector2 gridOrigin = new Vector2(enemy.transform.position.x - (gridWidth * cellSize) / 2, enemy.transform.position.y - (gridHeight * cellSize) / 2);
+        int x = Mathf.FloorToInt((worldPosition.x - gridOrigin.x) / cellSize);
+        int y = Mathf.FloorToInt((worldPosition.y - gridOrigin.y) / cellSize);
+
+        if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight)
+            return grid[x, y];
+
+        return null;
+    }
+
+    private List<Node> GetNeighbors(Node node)
+    {
+        List<Node> neighbors = new List<Node>();
+        Vector3Int[] directions = { Vector3Int.right, Vector3Int.left, Vector3Int.up, Vector3Int.down };
+
+        foreach (Vector3Int direction in directions)
+        {
+            int neighborX = node.gridPosition.x + direction.x;
+            int neighborY = node.gridPosition.y + direction.y;
+
+            if (neighborX >= 0 && neighborX < gridWidth && neighborY >= 0 && neighborY < gridHeight)
+                neighbors.Add(grid[neighborX, neighborY]);
+        }
+
+        return neighbors;
+    }
+
+    private List<Node> RetracePath(Dictionary<Node, Node> cameFrom, Node startNode, Node endNode)
+    {
+        List<Node> path = new List<Node>();
+        Node currentNode = endNode;
+
+        while (currentNode != startNode)
+        {
+            path.Add(currentNode);
+            currentNode = cameFrom[currentNode];
         }
 
         path.Reverse();
         return path;
     }
 
-    private int GetHeuristic(Vector3Int a, Vector3Int b)
+    private int GetHeuristic(Node a, Node b)
     {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        return Mathf.Abs(a.gridPosition.x - b.gridPosition.x) + Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
     }
 
     private void OnDrawGizmos()
     {
+        if (grid == null || enemy == null) return;
+
+        foreach (Node node in grid)
+        {
+            Gizmos.color = node.walkable ? Color.white : Color.red;
+            Gizmos.DrawCube(node.worldPosition, Vector3.one * (cellSize * 0.9f));
+        }
+
         if (path == null) return;
 
         Gizmos.color = Color.green;
-
         for (int i = 0; i < path.Count; i++)
         {
-            Vector3 worldPosition = tilemapManager.TileToWorldPosition(path[i]);
-            Gizmos.DrawSphere(worldPosition, 0.2f); 
+            Gizmos.DrawSphere(path[i].worldPosition, 0.1f);
 
             if (i < path.Count - 1)
-            {
-                Vector3 nextWorldPosition = tilemapManager.TileToWorldPosition(path[i + 1]);
-                Gizmos.DrawLine(worldPosition, nextWorldPosition);
-            }
+                Gizmos.DrawLine(path[i].worldPosition, path[i + 1].worldPosition);
         }
     }
 }

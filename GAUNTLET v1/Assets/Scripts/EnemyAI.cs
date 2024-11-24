@@ -6,79 +6,88 @@ public class EnemyAI : MonoBehaviour
 {
     public Transform target;
     public float speed = 2f;
-    public float jumpForce = 4f; 
-    public float jumpDelay = 0.5f; 
-    public float nodeProx = 0.2f; 
+    public float jumpForce = 4f;
+    public float jumpDelay = 0.5f;  // Cooldown between jumps
+    public float nodeProx = 0.2f;
 
     Pathfinding pathfinding;
-    GridManager gridManager;
-    List<Vector3Int> path;
+    List<Vector3> path;
     int targetIndex;
     Rigidbody2D rb;
-    bool isJumping = false; 
+    public bool canJump = true;  // Variable to track if the enemy can jump
 
-    private void Start()
+    public bool isGrounded;
+    public Transform groundCheck;
+    public LayerMask groundLayer;
+
+    void Start()
     {
-        pathfinding = GetComponent<Pathfinding>();
-        gridManager = FindObjectOfType<GridManager>();
-        rb = GetComponent<Rigidbody2D>(); 
+        pathfinding = FindObjectOfType<Pathfinding>();
+        rb = GetComponent<Rigidbody2D>();
         target = GameObject.FindWithTag("Player").transform;
 
         StartCoroutine(UpdatePath());
     }
 
-    private void Update()
+    void Update()
     {
-        FollowPath();
+        if (path != null && targetIndex < path.Count)
+        {
+            FollowPath();
+        }
+
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
 
     IEnumerator UpdatePath()
     {
+        yield return new WaitForSeconds(0.1f);
         while (true)
         {
-            path = pathfinding.FindPath(transform.position, target.position);
-            targetIndex = 0;
-            yield return new WaitForSeconds(0.5f); 
+            if (target != null)
+            {
+                path = pathfinding.FindPath(transform.position, target.position);
+                targetIndex = 0;
+            }
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
     void FollowPath()
     {
-        if (path == null || targetIndex >= path.Count) return;
+        Vector3 currentNode = path[targetIndex];
+        Vector3 nextNode = (targetIndex + 1 < path.Count) ? path[targetIndex + 1] : currentNode;
 
-        Vector3 targetPosition = gridManager.TileToWorldPosition(path[targetIndex]);
+        Vector3 direction = nextNode - transform.position;
+        direction.z = 0;
 
-        if (targetPosition.y > transform.position.y + 0.7f && !isJumping)
+        rb.velocity = new Vector2(direction.normalized.x * speed, rb.velocity.y);
+
+        if (direction.magnitude <= nodeProx)
         {
-            Jump(targetPosition); 
+            targetIndex++;
+            if (targetIndex >= path.Count)
+            {
+                targetIndex = path.Count - 1;
+            }
         }
-        else
-        {
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-        }
 
-        if (Vector2.Distance(transform.position, targetPosition) < nodeProx)
+        // Jumping logic with cooldown
+        if (isGrounded && canJump)
         {
-            targetIndex++; 
+            if (nextNode.y - .5f > transform.position.y)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                Debug.Log("jumped");
+                StartCoroutine(JumpCooldown());  // Start the cooldown after jumping
+            }
         }
     }
 
-    // Jump function to handle upward movement
-    void Jump(Vector3 targetPosition)
+    IEnumerator JumpCooldown()
     {
-        isJumping = true; 
-
-        Vector2 jumpDirection = new Vector2(targetPosition.x - transform.position.x, targetPosition.y - transform.position.y).normalized;
-
-        rb.velocity = new Vector2(rb.velocity.x, 0); 
-        rb.AddForce(new Vector2(jumpDirection.x * speed, jumpForce), ForceMode2D.Impulse);
-
-        StartCoroutine(ResetJump());
-    }
-
-    IEnumerator ResetJump()
-    {
-        yield return new WaitForSeconds(jumpDelay); 
-        isJumping = false; 
+        canJump = false;  // Prevent jumping
+        yield return new WaitForSeconds(jumpDelay);  // Wait for the cooldown duration
+        canJump = true;   // Allow jumping again
     }
 }
