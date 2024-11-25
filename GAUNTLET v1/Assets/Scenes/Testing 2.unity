@@ -574,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 468252415}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -154.73, y: -91.64, z: 0}
+  m_LocalPosition: {x: -164.1, y: -86.69, z: 0}
   m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1698,7 +1698,7 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
-  m_UseDelaunayMesh: 0
+  m_UseDelaunayMesh: 1
 --- !u!50 &536544181
 Rigidbody2D:
   serializedVersion: 4
@@ -1928,10 +1928,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e35f6ab794c4c6d956d41520b15b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 1092910526}
+  map: {fileID: 1092910526}
   gridWidth: 100
   gridHeight: 100
-  cellSize: 0.3
+  cellSize: 0.25
   tilemap: {fileID: 536544178}
 --- !u!4 &1092910528
 Transform:
@@ -2534,11 +2534,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2321804462694603496, guid: 7fe75ee51f21d4aee88ee3275bdb36a5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -149.08
+      value: -149.34
       objectReference: {fileID: 0}
     - target: {fileID: 2321804462694603496, guid: 7fe75ee51f21d4aee88ee3275bdb36a5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -91.5
+      value: -91.69
       objectReference: {fileID: 0}
     - target: {fileID: 2321804462694603496, guid: 7fe75ee51f21d4aee88ee3275bdb36a5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2577,8 +2577,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 468252420}
     - target: {fileID: 2980736263550848311, guid: 7fe75ee51f21d4aee88ee3275bdb36a5, type: 3}
+      propertyPath: canJump
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2980736263550848311, guid: 7fe75ee51f21d4aee88ee3275bdb36a5, type: 3}
       propertyPath: nodeProx
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2980736263550848311, guid: 7fe75ee51f21d4aee88ee3275bdb36a5, type: 3}
       propertyPath: jumpForce

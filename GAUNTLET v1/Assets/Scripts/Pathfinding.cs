@@ -1,11 +1,10 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Pathfinding : MonoBehaviour
 {
-    public GameObject enemy;
+    public GameObject map;
     public int gridWidth = 50;
     public int gridHeight = 50;
     public float cellSize = 0.2f;
@@ -13,33 +12,54 @@ public class Pathfinding : MonoBehaviour
 
     private Node[,] grid;
     private List<Node> path;
+    private List<Node> unwalkableNodes;
 
-    private void Update()
+    private void Start()
     {
-        if (enemy != null)
+        if (map != null)
         {
-            CreateGrid(enemy.transform.position);
+            CreateGrid(map.transform.position);
         }
     }
 
-    private void CreateGrid(Vector3 origin)
+    void CreateGrid(Vector3 origin)
+{
+    grid = new Node[gridWidth, gridHeight];
+    unwalkableNodes = new List<Node>();
+    Vector2 gridOrigin = new Vector2(origin.x - (gridWidth * cellSize) / 2, origin.y - (gridHeight * cellSize) / 2);
+
+    for (int x = 0; x < gridWidth; x++)
     {
-        grid = new Node[gridWidth, gridHeight];
-        Vector2 gridOrigin = new Vector2(origin.x - (gridWidth * cellSize) / 2, origin.y - (gridHeight * cellSize) / 2);
-
-        for (int x = 0; x < gridWidth; x++)
+        for (int y = 0; y < gridHeight; y++)
         {
-            for (int y = 0; y < gridHeight; y++)
-            {
-                Vector3 worldPosition = gridOrigin + new Vector2(x * cellSize, y * cellSize);
-                Vector3Int tilePosition = tilemap.WorldToCell(worldPosition);
+            Vector3 worldPosition = gridOrigin + new Vector2(x * cellSize, y * cellSize);
+            Vector3Int tilePosition = tilemap.WorldToCell(worldPosition);
 
-                bool isWalkable = !tilemap.HasTile(tilePosition);
-                grid[x, y] = new Node(new Vector3Int(x, y, 0), worldPosition, isWalkable);
+            bool isWalkable = !tilemap.HasTile(tilePosition);
+            Node newNode = new Node(new Vector3Int(x, y, 0), worldPosition, isWalkable);
+            grid[x, y] = newNode;
+
+            if (!isWalkable)
+            {
+                unwalkableNodes.Add(newNode);
             }
         }
     }
 
+    MarkAdjacentNodesUnwalkable();
+}
+
+    void MarkAdjacentNodesUnwalkable()
+    {
+        foreach (Node unwalkableNode in unwalkableNodes)
+        {
+            List<Node> neighbors = GetNeighbors(unwalkableNode);
+            foreach (Node neighbor in neighbors)
+            {
+                neighbor.walkable = false;
+            }
+        }
+    }
     public List<Vector3> FindPath(Vector2 startWorldPosition, Vector2 targetWorldPosition)
     {
         Node startNode = GetNodeFromWorldPosition(startWorldPosition);
@@ -115,7 +135,7 @@ public class Pathfinding : MonoBehaviour
 
     private Node GetNodeFromWorldPosition(Vector2 worldPosition)
     {
-        Vector2 gridOrigin = new Vector2(enemy.transform.position.x - (gridWidth * cellSize) / 2, enemy.transform.position.y - (gridHeight * cellSize) / 2);
+        Vector2 gridOrigin = new Vector2(map.transform.position.x - (gridWidth * cellSize) / 2, map.transform.position.y - (gridHeight * cellSize) / 2);
         int x = Mathf.FloorToInt((worldPosition.x - gridOrigin.x) / cellSize);
         int y = Mathf.FloorToInt((worldPosition.y - gridOrigin.y) / cellSize);
 
@@ -162,9 +182,9 @@ public class Pathfinding : MonoBehaviour
         return Mathf.Abs(a.gridPosition.x - b.gridPosition.x) + Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
     }
 
-    private void OnDrawGizmos()
+    void OnDrawGizmos()
     {
-        if (grid == null || enemy == null) return;
+        if (grid == null || map == null) return;
 
         foreach (Node node in grid)
         {
