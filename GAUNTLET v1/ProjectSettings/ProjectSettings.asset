@@ -704,11 +704,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: ba2c52fd-b6dd-40e6-bc6d-daad078ef897
+  cloudProjectId: 937d9a20-004a-4a6c-a2a6-b7cb76a7dae6
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: GAUNTLET v1 2024-11-14_18-54-54
-  organizationId: jacksonsk8s
+  projectName: GAUNTLET v1
+  organizationId: nikolairn
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
