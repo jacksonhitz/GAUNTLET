@@ -112,4 +112,12 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
         rb.gravityScale = 1; // Restore gravity
     }
+
+    public void Die()
+    {
+        Debug.Log("Player Died!");
+        // Add player death logic here, like restarting the level, reducing health, etc.
+        Destroy(gameObject); // Example: destroys the player object
+    }
 }
+
