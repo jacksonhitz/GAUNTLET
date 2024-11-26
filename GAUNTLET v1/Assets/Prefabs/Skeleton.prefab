@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3668057903213820383}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 1993776658837146505}
   - component: {fileID: 1402635266484448958}
   - component: {fileID: 2980736263550848311}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,12 +205,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1576819974551484411, guid: 5e2110b983a9344bd95495f719423d49, type: 3}
   speed: 2
-  jumpForce: 4
-  jumpDelay: 0.5
   nodeProx: 0.2
-  canJump: 1
-  isGrounded: 1
-  groundCheck: {fileID: 0}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 1

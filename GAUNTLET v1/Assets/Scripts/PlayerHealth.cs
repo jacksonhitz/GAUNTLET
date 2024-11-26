@@ -30,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
         lastDamageTime = Time.time;
 
         currentHealth -= damage;           // Reduce health
-        PlayDamageFeedback();              // Trigger sound and particle effects
+        PlayDamageFeedback();             
 
         if (currentHealth <= 0 && !isDead)
         {

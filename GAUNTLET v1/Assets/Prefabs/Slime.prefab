@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1205180492982909856}
   - component: {fileID: 3817777583786043536}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Circle
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1648171465710726682}
   - component: {fileID: 188072438356987897}
   - component: {fileID: 947046766652872196}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Slime
   m_TagString: Enemy
   m_Icon: {fileID: 0}
