@@ -1367,6 +1367,126 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fbb4f03e90a0364d85801d151402f3b, type: 3}
+--- !u!1 &432508380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 432508381}
+  - component: {fileID: 432508382}
+  - component: {fileID: 432508383}
+  m_Layer: 10
+  m_Name: Shield
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &432508381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432508380}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.25, y: 2.25, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1138215344}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &432508382
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432508380}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 569341911
+  m_SortingLayer: 1
+  m_SortingOrder: 5
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Color: {r: 0.1462264, g: 1, b: 0.9653268, a: 0.19607843}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!58 &432508383
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432508380}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.50000006
 --- !u!4 &489010172 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4334692937044541782, guid: f7970e9a1fda34c33b664da872ff3103, type: 3}
@@ -84037,7 +84157,7 @@ GameObject:
   - component: {fileID: 1138215341}
   - component: {fileID: 1138215340}
   m_Layer: 6
-  m_Name: Gauntlets
+  m_Name: Gauntlet
   m_TagString: Gauntlet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84055,7 +84175,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -84127,15 +84247,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9832238ab2a842c1b411e00f121e0ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 30
-  launchSpeed: 30
-  slamSpeed: 50
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  moveSpeed: 15
+  punchSpeed: 200
+  punchDistance: 3
+  punchDuration: 0.2
+  slamSpeed: 30
+  slamDuration: 0.2
+  tilemap: {fileID: 536544178}
   collisionRadius: 0.245
-  returnSpeed: 200
-  launchThreshold: 0.001
+  shield: {fileID: 432508380}
 --- !u!212 &1138215343
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -84197,10 +84317,11 @@ Transform:
   m_GameObject: {fileID: 1138215339}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -28.84, y: -2.1200004, z: 0}
+  m_LocalPosition: {x: -28.84, y: -2.1200004, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 432508381}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1199496903 stripped
@@ -84741,6 +84862,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 830267053}
     m_Modifications:
+    - target: {fileID: 1648171465710726682, guid: 4fbb4f03e90a0364d85801d151402f3b, type: 3}
+      propertyPath: m_Radius
+      value: 0.66989434
+      objectReference: {fileID: 0}
+    - target: {fileID: 1648171465710726682, guid: 4fbb4f03e90a0364d85801d151402f3b, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.03511429
+      objectReference: {fileID: 0}
+    - target: {fileID: 1648171465710726682, guid: 4fbb4f03e90a0364d85801d151402f3b, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.14258277
+      objectReference: {fileID: 0}
     - target: {fileID: 2535016263160466631, guid: 4fbb4f03e90a0364d85801d151402f3b, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -86361,7 +86494,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1138215344}
   - {fileID: 5259579523534132458}
   - {fileID: 1206882488}
   - {fileID: 830267053}
@@ -86372,3 +86504,4 @@ SceneRoots:
   - {fileID: 223713654}
   - {fileID: 1003982253}
   - {fileID: 1631708414}
+  - {fileID: 1138215344}

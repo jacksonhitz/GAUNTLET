@@ -213,10 +213,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8429041836738318672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d847ca87c278d46a1b64396f77bf0e3e, type: 3}
+  m_Script: {fileID: 11500000, guid: 91f5fbad5031941f09040f66d4047427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 30
+  maxHealth: 20
   currentHealth: 0
   damageAmount: 10
   deathEffectPrefab: {fileID: 4813688462502952101, guid: fb9b09286b5b779408fa93903fe3bf32, type: 3}
