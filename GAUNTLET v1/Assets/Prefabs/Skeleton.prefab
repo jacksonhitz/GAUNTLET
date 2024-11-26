@@ -203,14 +203,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f576e03f980f34e33b379bd181ade5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 1576819974551484411, guid: 5e2110b983a9344bd95495f719423d49, type: 3}
   speed: 2
   jumpForce: 4
   jumpDelay: 0.5
   nodeProx: 0.2
   canJump: 1
-  isGrounded: 0
+  isGrounded: 1
   groundCheck: {fileID: 0}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1

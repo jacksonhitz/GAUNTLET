@@ -11,6 +11,9 @@ public class PlayerHealth : MonoBehaviour
     private float lastDamageTime = -Mathf.Infinity; // Track time of last damage taken
     private AudioSource audioSource;       // Audio source component
 
+    public GameManagerScript gameManager;
+    private bool isDead;
+    
     void Start()
     {
         currentHealth = maxHealth;         // Initialize health
@@ -29,9 +32,10 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;           // Reduce health
         PlayDamageFeedback();              // Trigger sound and particle effects
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !isDead)
         {
-            Die();                         // Handle death
+            isDead = true;
+            gameManager.gameOver();
         }
     }
 
@@ -46,12 +50,5 @@ public class PlayerHealth : MonoBehaviour
         {
             Instantiate(damageEffectPrefab, transform.position, Quaternion.identity); // Spawn particle effect
         }
-    }
-
-    private void Die()
-    {
-        Debug.Log("Player Died!");
-        // Add your death logic here (e.g., reload the scene, show game over screen, etc.)
-        Destroy(gameObject); // Destroy the player object
     }
 }

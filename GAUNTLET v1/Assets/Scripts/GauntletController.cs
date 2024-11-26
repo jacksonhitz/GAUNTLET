@@ -31,7 +31,7 @@ public class FollowMouseWithDelay : MonoBehaviour
         if (mainCamera == null) return;
 
         mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0;
+        mousePosition.z = 0; // Ensure Z is 0 for 2D
 
         if (isSlamming)
         {
@@ -66,8 +66,11 @@ public class FollowMouseWithDelay : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
         }
-    }
 
+        // Rotate the gauntlet to face the mouse
+        float angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+    }
 
     private void HandleInput()
     {
