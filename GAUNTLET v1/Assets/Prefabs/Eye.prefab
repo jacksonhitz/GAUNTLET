@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 2297797550707686792}
   - component: {fileID: 4428664470261383893}
   - component: {fileID: 2837420561339465326}
-  m_Layer: 0
+  - component: {fileID: 1488585414756366315}
+  m_Layer: 10
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,3 +164,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   followRange: 10
+--- !u!114 &1488585414756366315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8094528502707416776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d847ca87c278d46a1b64396f77bf0e3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  currentHealth: 0
+  damageAmount: 10
+  deathEffectPrefab: {fileID: 7166053395627342346, guid: b300a4d2d9f799040887ce2c1f257229, type: 3}

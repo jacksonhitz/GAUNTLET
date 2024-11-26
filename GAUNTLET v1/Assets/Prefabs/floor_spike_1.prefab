@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3165038048582276521}
   - component: {fileID: 653353302177364184}
   - component: {fileID: 3022701932956281134}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: floor_spike_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

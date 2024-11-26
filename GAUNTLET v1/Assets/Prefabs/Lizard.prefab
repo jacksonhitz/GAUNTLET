@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4182356352973734150}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1409693370534077200}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1175, y: 0.0032, z: 0}
+  m_LocalPosition: {x: -0.171, y: 0.008, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79,6 +79,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1488585414756366315, guid: 146624bfbab714cabb681a1bf57835c0, type: 3}
+      propertyPath: deathEffectPrefab
+      value: 
+      objectReference: {fileID: 5855782691315158757, guid: 752e1e75d03683846a1eb6dc796f9fac, type: 3}
     - target: {fileID: 2297797550707686792, guid: 146624bfbab714cabb681a1bf57835c0, type: 3}
       propertyPath: m_GravityScale
       value: 1
