@@ -99,6 +99,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lizard
       objectReference: {fileID: 0}
+    - target: {fileID: 8094528502707416776, guid: 146624bfbab714cabb681a1bf57835c0, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2837420561339465326, guid: 146624bfbab714cabb681a1bf57835c0, type: 3}
     - {fileID: 4428664470261383893, guid: 146624bfbab714cabb681a1bf57835c0, type: 3}
