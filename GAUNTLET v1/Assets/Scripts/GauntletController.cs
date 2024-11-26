@@ -1,29 +1,48 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class FollowMouseWithDelay : MonoBehaviour
+public class GauntletController : MonoBehaviour
 {
-    public float moveSpeed = 20f; // Speed at which the object follows the mouse
-    public float launchSpeed = 30f; // Speed when launching forward
-    public float slamSpeed = 50f; // Speed for slamming down
-    public LayerMask groundLayer;
+    float currentSpeed;
+
+    public float moveSpeed = 20f;
+    public float punchSpeed = 30f;
+    public float punchDistance = 2f;
+    public float punchDuration = 0.2f;
+
+    public float slamSpeed = 30f;
+    public float slamDuration = 0.2f;
+
+    public Tilemap tilemap;
+
     public float collisionRadius = 0.245f;
-    public float returnSpeed = 50f; // Speed for snapping back to the mouse position
-    public float launchThreshold = 0.1f; // Minimum distance to launch
 
-    private bool isLaunched = false;
-    private bool isSlamming = false;
-    private Vector3 launchDirection;
-    private Vector3 mousePosition;
+    bool isPunching = false;
+    bool isReturning = false;
+    bool isSlamming = false;
+    bool isShielded = false;
+    public GameObject shield;
 
-    private Camera mainCamera;
+    Vector3 punchDirection;
+    Vector3 mousePosition;
+    Camera mainCamera;
+
+    float punchTimer = 0f;
+    float slamTimer = 0f;
+    Vector3 slamStartPosition;
+
+    Vector3 punchStartPosition;
+
+    BoxCollider2D boxCollider;
+
+    public int damage = 10; // Damage dealt to enemies
 
     void Start()
     {
         mainCamera = Camera.main;
-        if (mainCamera == null)
-        {
-            Debug.LogError("Main Camera not assigned or found!");
-        }
+        boxCollider = GetComponent<BoxCollider2D>();
+
+        currentSpeed = moveSpeed;
     }
 
     void Update()
@@ -31,91 +50,136 @@ public class FollowMouseWithDelay : MonoBehaviour
         if (mainCamera == null) return;
 
         mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0; // Ensure Z is 0 for 2D
+        mousePosition.z = 0;
 
-        if (isSlamming)
+        boxCollider.enabled = isPunching || isSlamming;
+
+        if (isSlamming && !isShielded)
         {
             SlamDown();
         }
-        else if (isLaunched)
+        else if (isPunching && !isShielded)
         {
-            LaunchForward();
+            PunchForward();
         }
         else
         {
-            FollowMouse();
+            if (IsClear(mousePosition))
+            {
+                FollowMouse();
+            }
+            else
+            {
+                Idle();
+            }
         }
 
         HandleInput();
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            shield.SetActive(true);
+            isShielded = true;
+        }
+        else
+        {
+            shield.SetActive(false);
+            isShielded = false;
+        }
     }
 
-    private void FollowMouse()
+    void FollowMouse()
     {
-        // Calculate direction from gauntlet to mouse position
         Vector3 directionToMouse = mousePosition - transform.position;
-
-        // Add an offset to this direction so the gauntlet doesn't center directly on the cursor
-        float offsetDistance = 0.5f; // This controls how far the gauntlet stays from the cursor
+        float offsetDistance = 0.5f;
         Vector3 offsetDirection = directionToMouse.normalized * offsetDistance;
-
-        // Calculate the new target position with the offset
         Vector3 targetPosition = mousePosition - offsetDirection;
 
-        // Perform collision check before moving
-        if (!Physics2D.OverlapCircle(targetPosition, collisionRadius, groundLayer))
+        if (IsClear(targetPosition))
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
         }
 
-        // Rotate the gauntlet to face the mouse
         float angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
-    private void HandleInput()
+    bool IsClear(Vector3 position)
     {
-        if (Input.GetMouseButtonDown(0) && !isLaunched && Vector3.Distance(transform.position, mousePosition) > launchThreshold)
+        Vector3Int tilePosition = tilemap.WorldToCell(position);
+        TileBase tile = tilemap.GetTile(tilePosition);
+        return tile == null;
+    }
+
+    void HandleInput()
+    {
+        if (Input.GetMouseButtonDown(0) && !isPunching && !isReturning && !isSlamming)
         {
-            StartLaunch();
+            StartPunch();
         }
 
-        if (Input.GetMouseButtonDown(1) && !isSlamming) // Right-click for slam
+        if ((Input.GetMouseButtonDown(1) || Input.GetKeyDown("x")) && !isSlamming)
         {
             StartSlam();
         }
     }
 
-    private void StartLaunch()
+    void StartPunch()
     {
-        launchDirection = (mousePosition - transform.position).normalized;
-        isLaunched = true;
+        punchDirection = (mousePosition - transform.position).normalized;
+        punchStartPosition = transform.position;
+        punchTimer = 0f;
+        isPunching = true;
     }
 
-    private void LaunchForward()
+    void PunchForward()
     {
-        transform.position += launchDirection * launchSpeed * Time.deltaTime;
+        punchTimer += Time.deltaTime;
 
-        // Check for collision with the ground to stop launching
-        if (Physics2D.OverlapCircle(transform.position, collisionRadius, groundLayer))
+        transform.position = Vector3.MoveTowards(transform.position, punchStartPosition + punchDirection * punchDistance, punchSpeed * Time.deltaTime);
+
+        if (punchTimer >= punchDuration)
         {
-            isLaunched = false;
+            isPunching = false;
         }
     }
 
-    private void StartSlam()
+    void StartSlam()
     {
+        slamStartPosition = transform.position;
+        slamTimer = 0f;
         isSlamming = true;
     }
 
-    private void SlamDown()
+    void SlamDown()
     {
-        Vector3 slamTarget = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z); // Slam downwards
-        transform.position = Vector3.MoveTowards(transform.position, slamTarget, slamSpeed * Time.deltaTime);
+        slamTimer += Time.deltaTime;
 
-        // Check for collision with the ground to stop slamming
-        if (Physics2D.OverlapCircle(transform.position, collisionRadius, groundLayer))
+        transform.position = Vector3.MoveTowards(transform.position, slamStartPosition - Vector3.up * punchDistance, slamSpeed * Time.deltaTime);
+
+        if (slamTimer >= slamDuration)
         {
             isSlamming = false;
+        }
+    }
+
+    void Idle()
+    {
+        transform.Rotate(Vector3.forward * 360 * Time.deltaTime);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (isPunching || isSlamming)
+        {
+            if (collision.gameObject.CompareTag("Enemy"))
+            {
+                EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(damage);
+                }
+            }
         }
     }
 }

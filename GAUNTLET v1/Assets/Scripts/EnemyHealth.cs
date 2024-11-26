@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SlimeHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth = 20;             // Maximum health of the slime
     public int currentHealth;             // Current health of the slime
@@ -14,21 +14,12 @@ public class SlimeHealth : MonoBehaviour
         currentHealth = maxHealth;        // Initialize health to max health
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Check if the slime collides with the gauntlets
-        if (collision.gameObject.CompareTag("Gauntlet"))
-        {
-            TakeDamage(damageAmount);
-        }
-    }
-
     public void TakeDamage(int damage)
     {
         if (isDead) return;               // Prevent further damage if already dead
 
         currentHealth -= damage;          // Reduce health
-        Debug.Log($"Slime took {damage} damage! Current health: {currentHealth}");
+        Debug.Log($"took {damage} damage! Current health: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -41,7 +32,7 @@ public class SlimeHealth : MonoBehaviour
         if (isDead) return;               // Ensure death logic is called only once
         isDead = true;
 
-        Debug.Log("Slime Died!");
+        Debug.Log("Enemy Slain!");
 
         if (deathEffectPrefab != null)
         {

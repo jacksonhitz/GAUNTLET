@@ -7,6 +7,7 @@ TagManager:
   - Gauntlet
   - Ground
   - Enemy
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Props
   - background
   - Enemy
-  - 
+  - Shield
   - 
   - 
   - 
@@ -43,4 +44,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Shield
+    uniqueID: 569341911
     locked: 0
