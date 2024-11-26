@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class GameManagerScript : MonoBehaviour
 {
-   [SerializeField] public GameObject gameOverUI;
+   public GameObject gameOverUI;
 
     // Start is called before the first frame update
     void Start()
@@ -21,5 +22,10 @@ public class GameManagerScript : MonoBehaviour
     public void gameOver()
     {
         gameOverUI.SetActive(true);
+    }
+
+    public void tryAgain()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
