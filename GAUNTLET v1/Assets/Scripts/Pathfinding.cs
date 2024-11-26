@@ -23,31 +23,31 @@ public class Pathfinding : MonoBehaviour
     }
 
     void CreateGrid(Vector3 origin)
-{
-    grid = new Node[gridWidth, gridHeight];
-    unwalkableNodes = new List<Node>();
-    Vector2 gridOrigin = new Vector2(origin.x - (gridWidth * cellSize) / 2, origin.y - (gridHeight * cellSize) / 2);
-
-    for (int x = 0; x < gridWidth; x++)
     {
-        for (int y = 0; y < gridHeight; y++)
+        grid = new Node[gridWidth, gridHeight];
+        unwalkableNodes = new List<Node>();
+        Vector2 gridOrigin = new Vector2(origin.x - (gridWidth * cellSize) / 2, origin.y - (gridHeight * cellSize) / 2);
+
+        for (int x = 0; x < gridWidth; x++)
         {
-            Vector3 worldPosition = gridOrigin + new Vector2(x * cellSize, y * cellSize);
-            Vector3Int tilePosition = tilemap.WorldToCell(worldPosition);
-
-            bool isWalkable = !tilemap.HasTile(tilePosition);
-            Node newNode = new Node(new Vector3Int(x, y, 0), worldPosition, isWalkable);
-            grid[x, y] = newNode;
-
-            if (!isWalkable)
+            for (int y = 0; y < gridHeight; y++)
             {
-                unwalkableNodes.Add(newNode);
+                Vector3 worldPosition = gridOrigin + new Vector2(x * cellSize, y * cellSize);
+                Vector3Int tilePosition = tilemap.WorldToCell(worldPosition);
+
+                bool isWalkable = !tilemap.HasTile(tilePosition);
+                Node newNode = new Node(new Vector3Int(x, y, 0), worldPosition, isWalkable);
+                grid[x, y] = newNode;
+
+                if (!isWalkable)
+                {
+                    unwalkableNodes.Add(newNode);
+                }
             }
         }
-    }
 
-    MarkAdjacentNodesUnwalkable();
-}
+        MarkAdjacentNodesUnwalkable();
+    }
 
     void MarkAdjacentNodesUnwalkable()
     {
@@ -60,6 +60,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
     }
+
     public List<Vector3> FindPath(Vector2 startWorldPosition, Vector2 targetWorldPosition)
     {
         Node startNode = GetNodeFromWorldPosition(startWorldPosition);
@@ -148,7 +149,12 @@ public class Pathfinding : MonoBehaviour
     private List<Node> GetNeighbors(Node node)
     {
         List<Node> neighbors = new List<Node>();
-        Vector3Int[] directions = { Vector3Int.right, Vector3Int.left, Vector3Int.up, Vector3Int.down };
+        Vector3Int[] directions = 
+        { 
+            Vector3Int.right, Vector3Int.left, Vector3Int.up, Vector3Int.down,
+            new Vector3Int(1, 1, 0), new Vector3Int(-1, 1, 0), 
+            new Vector3Int(1, -1, 0), new Vector3Int(-1, -1, 0)
+        };
 
         foreach (Vector3Int direction in directions)
         {
@@ -179,7 +185,10 @@ public class Pathfinding : MonoBehaviour
 
     private int GetHeuristic(Node a, Node b)
     {
-        return Mathf.Abs(a.gridPosition.x - b.gridPosition.x) + Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
+        // Using Manhattan distance for heuristic with diagonals.
+        int dx = Mathf.Abs(a.gridPosition.x - b.gridPosition.x);
+        int dy = Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
+        return dx + dy + (Mathf.Min(dx, dy) - dx - dy);
     }
 
     void OnDrawGizmos()
