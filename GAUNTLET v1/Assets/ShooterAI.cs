@@ -2,18 +2,16 @@ using UnityEngine;
 
 public class LizardAI : MonoBehaviour
 {
-    public GameObject projPrefab;
-    public Transform firePoint;
-    public float projectileSpeed = 5f;
-    Transform target;
-    public float detectionRange = 10f;
-    public float attackInterval = 2f;
+    public GameObject projPrefab; 
+    public Transform firePoint; 
+    public float projectileSpeed = 5f; 
+    Transform target; 
+    public float detectionRange = 10f; 
+    public float attackInterval = 2f; 
 
     float attackTimer;
 
-    Animator animator;
-
-    private bool hasFiredOnce = false; // Track if the fire animation has played once
+    Animator animator; 
 
     void Start()
     {
@@ -30,22 +28,15 @@ public class LizardAI : MonoBehaviour
             if (attackTimer <= 0f)
             {
                 Fire();
-                attackTimer = attackInterval;
+                attackTimer = attackInterval; 
             }
         }
     }
 
     void Fire()
     {
-        if (!hasFiredOnce)
-        {
-            animator.Play("fire");  // Play the fire animation once
-            animator.speed = 0f;     // Stop the animation from looping immediately
-            hasFiredOnce = true;     // Set flag to prevent repeating the animation
-            Invoke(nameof(ResetAnimationSpeed), 0.5f);  // Reset animation speed after a short delay
-        }
-
-        Invoke(nameof(FireProjectile), 0.5f); // Delay the projectile firing slightly
+        animator.Play("fire");
+        Invoke(nameof(FireProjectile), 0.5f); 
     }
 
     void FireProjectile()
@@ -55,13 +46,13 @@ public class LizardAI : MonoBehaviour
 
         Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
         rb.velocity = direction * projectileSpeed;
+
+        Invoke(nameof(Idle), 0.5f); 
     }
 
-    // This method resets the animation speed back to normal
-    void ResetAnimationSpeed()
+    void Idle()
     {
-        animator.speed = 1f;   // Reset speed to normal
-        hasFiredOnce = false;  // Allow the fire animation to play again on the next attack
+        animator.Play("Idle");
     }
 
     void OnDrawGizmosSelected()
