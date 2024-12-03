@@ -42,10 +42,10 @@ public class SlimeMonster : MonoBehaviour
             HopTowardsPlayer();
         }
 
-        // Stop sliding if not hopping
-        if (!isHopping)
+        // Stop sliding if not hopping, but only when grounded
+        if (!isHopping && isGrounded)
         {
-            rb.velocity = Vector2.zero;
+            rb.velocity = Vector2.zero; // Zero velocity only when grounded and not hopping
         }
     }
 
