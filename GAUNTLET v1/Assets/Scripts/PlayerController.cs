@@ -29,9 +29,12 @@ public class PlayerController : MonoBehaviour
 
     private bool isMoving;
 
+    private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer for flipping
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
         canDash = true;
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -70,6 +73,18 @@ public class PlayerController : MonoBehaviour
         {
             isMoving = false;
             StopWalkingSound();
+        }
+
+        // Flip the sprite depending on the direction of movement
+        if (moveInput > 0)
+        {
+            // Moving right
+            spriteRenderer.flipX = false; // Make sure the sprite faces right
+        }
+        else if (moveInput < 0)
+        {
+            // Moving left
+            spriteRenderer.flipX = true; // Flip the sprite to face left
         }
     }
 
