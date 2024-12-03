@@ -3,7 +3,11 @@ guid: 7b970818e304046fda77a5d63529955f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - groundCheck: {instanceID: 0}
+  - walkingSound: {fileID: 8300000, guid: d9a1244597c931b4da1046f5ccb0f24a, type: 3}
+  - jumpSound: {instanceID: 0}
+  - dashSound: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
