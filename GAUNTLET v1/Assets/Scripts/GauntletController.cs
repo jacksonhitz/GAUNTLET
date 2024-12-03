@@ -3,12 +3,13 @@ using UnityEngine.Tilemaps;
 
 public class GauntletController : MonoBehaviour
 {
+
     float currentSpeed;
 
     public float moveSpeed = 20f;
     public float punchSpeed = 30f;
     public float punchDistance = 2f;
-    public float punchDuration = 0.2f;
+    public float punchDuration = 0.5f;
 
     public float slamSpeed = 30f;
     public float slamDuration = 0.2f;
@@ -35,12 +36,28 @@ public class GauntletController : MonoBehaviour
 
     BoxCollider2D boxCollider;
 
+    // Add Rigidbody2D here
+    private Rigidbody2D rb;
+
     public int damage = 10; // Damage dealt to enemies
+
+    // Sound effects
+    public AudioClip punchSound;
+    public AudioClip slamSound;
+    private AudioSource audioSource;
 
     void Start()
     {
         mainCamera = Camera.main;
         boxCollider = GetComponent<BoxCollider2D>();
+        audioSource = GetComponent<AudioSource>();
+
+        // Initialize Rigidbody2D
+        rb = GetComponent<Rigidbody2D>();
+
+        // Hide the cursor and allow it to move freely from the start
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None; // Ensure the cursor isn't locked to the center
 
         currentSpeed = moveSpeed;
     }
@@ -76,6 +93,12 @@ public class GauntletController : MonoBehaviour
 
         HandleInput();
 
+        // Check if Escape is pressed to unlock the cursor
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnlockCursor();
+        }
+
         if (Input.GetKey(KeyCode.Q))
         {
             shield.SetActive(true);
@@ -97,7 +120,7 @@ public class GauntletController : MonoBehaviour
 
         if (IsClear(targetPosition))
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
+            rb.MovePosition(Vector3.MoveTowards(rb.position, targetPosition, currentSpeed * Time.deltaTime));
         }
 
         float angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
@@ -130,13 +153,16 @@ public class GauntletController : MonoBehaviour
         punchStartPosition = transform.position;
         punchTimer = 0f;
         isPunching = true;
+
+        PlaySound(punchSound);
     }
 
     void PunchForward()
     {
         punchTimer += Time.deltaTime;
 
-        transform.position = Vector3.MoveTowards(transform.position, punchStartPosition + punchDirection * punchDistance, punchSpeed * Time.deltaTime);
+        // Move the Rigidbody2D instead of directly modifying transform.position
+        rb.MovePosition(Vector3.MoveTowards(rb.position, punchStartPosition + punchDirection * punchDistance, punchSpeed * Time.deltaTime));
 
         if (punchTimer >= punchDuration)
         {
@@ -149,13 +175,16 @@ public class GauntletController : MonoBehaviour
         slamStartPosition = transform.position;
         slamTimer = 0f;
         isSlamming = true;
+
+        PlaySound(slamSound);
     }
 
     void SlamDown()
     {
         slamTimer += Time.deltaTime;
 
-        transform.position = Vector3.MoveTowards(transform.position, slamStartPosition - Vector3.up * punchDistance, slamSpeed * Time.deltaTime);
+        // Move the Rigidbody2D for the slam effect
+        rb.MovePosition(Vector3.MoveTowards(rb.position, slamStartPosition - Vector3.up * punchDistance, slamSpeed * Time.deltaTime));
 
         if (slamTimer >= slamDuration)
         {
@@ -181,5 +210,20 @@ public class GauntletController : MonoBehaviour
                 }
             }
         }
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    // Method to unlock the cursor and show it again
+    void UnlockCursor()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None; // Unset the lock state to allow free cursor movement
     }
 }

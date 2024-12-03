@@ -132,11 +132,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 2
+  m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 2
-  m_Material: {fileID: 6200000, guid: bcc05068f14764dacbed5f22a0a72e1c, type: 2}
+  m_AngularDrag: 1
+  m_GravityScale: 0.8
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -156,7 +156,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 8429041836738318672}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: bcc05068f14764dacbed5f22a0a72e1c, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
     m_Bits: 8
   hopSound: {fileID: 8300000, guid: 0f31d298552494f37ab9863467f1bfda, type: 3}
   hitSound: {fileID: 8300000, guid: 567f6ad97191045e29a40062d34db209, type: 3}
-  deathSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 8f3d999a8a06d4cc895ea7e367e3f558, type: 3}
   hitEffectPrefab: {fileID: 0}
 --- !u!114 &947046766652872196
 MonoBehaviour:

@@ -3,7 +3,11 @@ guid: 75873615e906d4af4a7658be22803d3a
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - hopSound: {instanceID: 0}
+  - hitSound: {instanceID: 0}
+  - deathSound: {instanceID: 0}
+  - hitEffectPrefab: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

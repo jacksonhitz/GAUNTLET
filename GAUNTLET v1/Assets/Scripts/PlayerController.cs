@@ -13,6 +13,12 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public LayerMask groundLayer;
 
+    [Header("Audio")]
+    public AudioClip walkingSound;
+    public AudioClip jumpSound;
+    public AudioClip dashSound;
+    private AudioSource audioSource;
+
     private Rigidbody2D rb;
     public bool isGrounded;
     private int jumpCount;
@@ -21,10 +27,17 @@ public class PlayerController : MonoBehaviour
     private Vector2 dashDirection;
     private bool canDash; // Tracks if dash is available
 
+    private bool isMoving;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        canDash = true; 
+        canDash = true;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>(); // Add AudioSource if missing
+        }
     }
 
     void Update()
@@ -44,6 +57,20 @@ public class PlayerController : MonoBehaviour
     {
         float moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+
+        if (moveInput != 0 && isGrounded)
+        {
+            if (!isMoving)
+            {
+                PlayWalkingSound();
+                isMoving = true;
+            }
+        }
+        else
+        {
+            isMoving = false;
+            StopWalkingSound();
+        }
     }
 
     private void HandleJump()
@@ -58,10 +85,11 @@ public class PlayerController : MonoBehaviour
         // Jump when pressing the jump button and jump count is within limits
         if (Input.GetButtonDown("Jump"))
         {
-            if (isGrounded)
+            if (jumpCount < maxJumps)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 jumpCount++;
+                PlaySound(jumpSound);
             }
         }
     }
@@ -105,6 +133,8 @@ public class PlayerController : MonoBehaviour
 
         // Consume dash
         canDash = false;
+
+        PlaySound(dashSound);
     }
 
     private void EndDash()
@@ -113,5 +143,29 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 1; // Restore gravity
     }
 
-}
+    private void PlayWalkingSound()
+    {
+        if (walkingSound != null && audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.clip = walkingSound;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
+    }
 
+    private void StopWalkingSound()
+    {
+        if (audioSource != null && audioSource.isPlaying && audioSource.clip == walkingSound)
+        {
+            audioSource.Stop();
+        }
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+}

@@ -230,6 +230,8 @@ MonoBehaviour:
   collisionRadius: 0.245
   shield: {fileID: 135431772828482599}
   damage: 10
+  punchSound: {fileID: 0}
+  slamSound: {fileID: 0}
 --- !u!61 &6842931403632347891
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -298,7 +300,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 64
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
