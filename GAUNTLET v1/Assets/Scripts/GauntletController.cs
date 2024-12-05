@@ -184,6 +184,9 @@ public class GauntletController : MonoBehaviour
     {
         slamTimer += Time.deltaTime;
 
+        // Apply a faster rotation, for example, 300 degrees per second
+        transform.Rotate(Vector3.forward * -250 * Time.deltaTime);
+
         // Move the Rigidbody2D for the slam effect
         rb.MovePosition(Vector3.MoveTowards(rb.position, slamStartPosition - Vector3.up * punchDistance, slamSpeed * Time.deltaTime));
 

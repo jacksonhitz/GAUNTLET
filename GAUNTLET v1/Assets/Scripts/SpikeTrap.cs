@@ -26,5 +26,19 @@ public class SpikeTrap : MonoBehaviour
                 gameManager.gameOver();
             }
         }
+
+        // Check if any enemy collided with the spike trap
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            // Kill the enemy (you can modify this depending on how you want to handle enemies)
+            EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
+            if (enemy != null)
+            {
+                // Optionally, call a method to take damage, or simply destroy the enemy
+                enemy.TakeDamage(enemy.currentHealth); // Deal enough damage to kill
+                // Alternatively, destroy the enemy object:
+                // Destroy(collision.gameObject);
+            }
+        }
     }
 }
