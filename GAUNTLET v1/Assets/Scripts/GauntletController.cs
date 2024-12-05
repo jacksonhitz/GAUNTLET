@@ -54,6 +54,7 @@ public class GauntletController : MonoBehaviour
 
         // Initialize Rigidbody2D
         rb = GetComponent<Rigidbody2D>();
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // Corrected line
 
         // Hide the cursor and allow it to move freely from the start
         Cursor.visible = false;
