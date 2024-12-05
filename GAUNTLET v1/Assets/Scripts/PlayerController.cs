@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -9,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jumping")]
     public float jumpForce = 10f;
-    public int maxJumps = 2; // Maximum jumps (1 = single jump, 2 = double jump)
+    public int maxJumps = 2; // Maximum jumps (1 = single jump, 2 = double jump)\
     public Transform groundCheck;
     public LayerMask groundLayer;
 
@@ -29,6 +30,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isMoving;
 
+    Animator animator;
+
     private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer for flipping
 
     void Start()
@@ -41,11 +44,17 @@ public class PlayerController : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>(); // Add AudioSource if missing
         }
+
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
+        animator.SetFloat("yVelocity", rb.velocity.y);
+
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        animator.SetBool("isJumping", !isGrounded);
 
         if (!isDashing)
         {
@@ -59,34 +68,45 @@ public class PlayerController : MonoBehaviour
     private void HandleMovement()
     {
         float moveInput = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y); // Set movement velocity
 
+        // Only play walking sound when grounded
         if (moveInput != 0 && isGrounded)
         {
             if (!isMoving)
             {
+                Debug.Log("Walking sound should play.");
                 PlayWalkingSound();
                 isMoving = true;
             }
         }
         else
         {
-            isMoving = false;
+            if (isMoving && isGrounded)
+            {
+                Debug.Log("Walking sound should stop.");
+                StopWalkingSound();
+                isMoving = false;
+            }
+        }
+
+        // Stop walking sound if in the air
+        if (!isGrounded && isMoving)
+        {
             StopWalkingSound();
         }
 
         // Flip the sprite depending on the direction of movement
         if (moveInput > 0)
         {
-            // Moving right
-            spriteRenderer.flipX = false; // Make sure the sprite faces right
+            spriteRenderer.flipX = false;
         }
         else if (moveInput < 0)
         {
-            // Moving left
-            spriteRenderer.flipX = true; // Flip the sprite to face left
+            spriteRenderer.flipX = true;
         }
     }
+
 
     private void HandleJump()
     {
@@ -100,14 +120,17 @@ public class PlayerController : MonoBehaviour
         // Jump when pressing the jump button and jump count is within limits
         if (Input.GetButtonDown("Jump"))
         {
+            animator.SetBool("isJumping", !isGrounded);
             if (jumpCount < maxJumps)
             {
-                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-                jumpCount++;
-                PlaySound(jumpSound);
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply vertical force
+                jumpCount++; // Increase jump count
+
+                PlaySound(jumpSound); // Play the jump sound (first or second jump)
             }
         }
     }
+
 
     private void HandleDash()
     {
@@ -160,19 +183,39 @@ public class PlayerController : MonoBehaviour
 
     private void PlayWalkingSound()
     {
-        if (walkingSound != null && audioSource != null && !audioSource.isPlaying)
+        if (walkingSound != null && audioSource != null)
         {
-            audioSource.clip = walkingSound;
-            audioSource.loop = true;
-            audioSource.Play();
+            if (audioSource.clip != walkingSound || !audioSource.isPlaying)
+            {
+                Debug.Log("Playing walking sound.");
+                audioSource.Stop(); // Ensure the audio stops before playing
+                audioSource.clip = walkingSound;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+            else
+            {
+                Debug.Log("Walking sound already playing.");
+            }
+        }
+        else
+        {
+            Debug.Log($"Conditions not met: walkingSound={walkingSound}, audioSource={audioSource}, isPlaying={audioSource?.isPlaying}");
         }
     }
+
 
     private void StopWalkingSound()
     {
         if (audioSource != null && audioSource.isPlaying && audioSource.clip == walkingSound)
         {
+            Debug.Log("Stopping walking sound.");
             audioSource.Stop();
+            audioSource.clip = null; // Clear the clip to reset
+        }
+        else
+        {
+            Debug.Log("StopWalkingSound conditions not met.");
         }
     }
 

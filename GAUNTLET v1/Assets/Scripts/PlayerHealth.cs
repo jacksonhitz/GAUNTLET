@@ -43,7 +43,13 @@ public class PlayerHealth : MonoBehaviour
     {
         if (damageSound != null && audioSource != null)
         {
-            audioSource.PlayOneShot(damageSound); // Play damage sound
+            // Temporarily increase the volume before playing the sound
+            audioSource.volume = 1.2f; // Slightly increase the volume (e.g., 1.2 is 20% louder)
+
+            audioSource.PlayOneShot(damageSound); // Play the damage sound
+
+            // Optionally reset volume back to the default (1) if you want to prevent this adjustment from affecting other sounds
+            audioSource.volume = 1f; // Reset to the default volume
         }
 
         if (damageEffectPrefab != null)
@@ -51,4 +57,5 @@ public class PlayerHealth : MonoBehaviour
             Instantiate(damageEffectPrefab, transform.position, Quaternion.identity); // Spawn particle effect
         }
     }
+
 }
