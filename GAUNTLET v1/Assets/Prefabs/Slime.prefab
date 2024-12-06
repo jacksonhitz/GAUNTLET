@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -7078261816480267791, guid: bfeede70efd14484683f5956b4f1194b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -139,7 +139,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   cooldownTime: 1.5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 24
   hopSound: {fileID: 8300000, guid: 0f31d298552494f37ab9863467f1bfda, type: 3}
   hitSound: {fileID: 8300000, guid: 567f6ad97191045e29a40062d34db209, type: 3}
   deathSound: {fileID: 8300000, guid: 8f3d999a8a06d4cc895ea7e367e3f558, type: 3}

@@ -8,13 +8,15 @@ public class FlyAI : MonoBehaviour
 
     Vector3 initialPosition;
 
-    // Damage values
-    public int damage = 10;
+    public int damage = 10; // Damage values
+
+    SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer for flipping
 
     void Start()
     {
         target = GameObject.FindWithTag("Player").transform;
         initialPosition = transform.position;
+        spriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
     }
 
     void Update()
@@ -23,11 +25,29 @@ public class FlyAI : MonoBehaviour
 
         if (distanceToPlayer <= followRange)
         {
+            Vector3 directionToPlayer = (target.position - transform.position).normalized;
+            FlipEnemy(directionToPlayer.x);
             transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
         }
         else
         {
+            Vector3 directionToInitial = (initialPosition - transform.position).normalized;
+            FlipEnemy(directionToInitial.x);
             transform.position = Vector3.MoveTowards(transform.position, initialPosition, speed * Time.deltaTime);
+        }
+    }
+
+    void FlipEnemy(float directionX)
+    {
+        if (directionX > 0)
+        {
+            // Moving to the right, face right
+            spriteRenderer.flipX = false;
+        }
+        else if (directionX < 0)
+        {
+            // Moving to the left, face left
+            spriteRenderer.flipX = true;
         }
     }
 
