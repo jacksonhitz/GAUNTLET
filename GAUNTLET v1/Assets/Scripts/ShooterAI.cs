@@ -52,6 +52,14 @@ public class LizardAI : MonoBehaviour
         Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
         rb.velocity = direction * projectileSpeed;
 
+        // Align the projectile's rotation to its direction
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        projectile.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        // Add spinning behavior to the projectile
+        SpinProjectile spin = projectile.AddComponent<SpinProjectile>();
+        spin.spinSpeed = 360f; // Set spin speed (degrees per second)
+
         Invoke(nameof(Idle), 0.5f);
     }
 
@@ -82,5 +90,17 @@ public class LizardAI : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+}
+
+// New script for spinning the projectile
+public class SpinProjectile : MonoBehaviour
+{
+    public float spinSpeed = 360f; // Spin speed in degrees per second
+
+    void Update()
+    {
+        // Rotate the projectile around its z-axis
+        transform.Rotate(0, 0, spinSpeed * Time.deltaTime);
     }
 }

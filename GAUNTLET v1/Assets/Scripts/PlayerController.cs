@@ -156,6 +156,9 @@ public class PlayerController : MonoBehaviour
         isDashing = true;
         dashTime = dashDuration;
 
+        // Update Animator
+        animator.SetBool("isDashing", true);
+
         // Get horizontal input for dash direction
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         dashDirection = new Vector2(horizontalInput, 0).normalized;
@@ -178,6 +181,9 @@ public class PlayerController : MonoBehaviour
     private void EndDash()
     {
         isDashing = false;
+
+        // Update Animator
+        animator.SetBool("isDashing", false);
         rb.gravityScale = 1; // Restore gravity
     }
 

@@ -164,6 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   followRange: 10
+  damage: 10
 --- !u!114 &1488585414756366315
 MonoBehaviour:
   m_ObjectHideFlags: 0
