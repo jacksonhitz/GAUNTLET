@@ -13,6 +13,8 @@ public class PlayerHealth : MonoBehaviour
 
     public GameManagerScript gameManager;
     private bool isDead;
+
+    public UI ui;
     
     void Start()
     {
@@ -30,7 +32,10 @@ public class PlayerHealth : MonoBehaviour
         lastDamageTime = Time.time;
 
         currentHealth -= damage;           // Reduce health
-        PlayDamageFeedback();             
+        PlayDamageFeedback(); 
+
+        ui.UpdateHealth();
+
 
         if (currentHealth <= 0 && !isDead)
         {
